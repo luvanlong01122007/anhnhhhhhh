@@ -1,4 +1,4 @@
-﻿import telebot
+import telebot
 import subprocess
 import sys
 from requests import post, Session
@@ -423,8 +423,8 @@ def spam(message):
     
     count = int(count)
     
-    if count > 10:
-        bot.reply_to(message, "Số lần spam không được vượt quá 10 lần.")
+    if count > 5:
+        bot.reply_to(message, "Số lần spam không được vượt quá 5 lần.")
         return
 
     if sdt in blacklist:
@@ -459,7 +459,7 @@ def spam(message):
     except Exception as e:
         bot.reply_to(message, f"Lỗi khi lấy script từ {script_url}: {str(e)}")
 
-blacklist = ["0789041631", "112", "111", "1", "113"]
+blacklist = ["0789041631", "112", "111", "1", "113", "114", "115", "116", "117"]
 import requests
 import tempfile
 
@@ -481,7 +481,7 @@ def supersms(message):
 ┌───⭓ {name_bot}
 │» Reply User: @{username}
 │» Vui lòng nhập đầy đủ thông tin
-│» Lệnh ví dụ là /spam 0123456789 30  (số lần spam)
+│» Lệnh ví dụ là /spam 0123456789 100  (số lần spam)
 └───────
     '''
     
@@ -499,7 +499,7 @@ def supersms(message):
     count = int(count)
     
     if count > 30:
-        bot.reply_to(message, "Số lần spam không được vượt quá 10 lần.")
+        bot.reply_to(message, "Số lần spam không được vượt quá 30 lần.")
         return
 
     if sdt in blacklist:
