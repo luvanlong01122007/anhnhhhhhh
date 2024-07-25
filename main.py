@@ -248,61 +248,76 @@ def handle_yt_command(message):
         bot.reply_to(message, 'Không thể lấy thông tin từ API.')
 #####
 
-def get_facebook_info(facebook_id):
-    url = f"https://dichvukey.site/api/fb.php?id={facebook_id}"
-
-    try:
-        response = requests.get(url)
-        data = response.json()
-
-        # Extracting data from API response
-        name = data.get("name", "N/A")
-        username = data.get("username", "N/A")
-        about = data.get("about", "N/A")
-        link = data.get("link", "N/A")
-        total_count = data.get("total_count", "N/A")
-        birthday = data.get("birthday", "N/A")
-        gender = data.get("gender", "N/A")
-        relationship_status = data.get("relationship_status", "N/A")
-
-        # Constructing message to send to Telegram
-        message = (
-            f"Tên: {name}\n"
-            f"Username: {username}\n"
-            f"Tổng Số Người Theo Dõi: {total_count}\n"
-            f"About: {about}\n"
-            f"Link FB: {link}\n"
-            f"Sinh Nhật: {birthday}\n"
-            f"Gender: {gender}\n"
-            f"Relationship Status: {relationship_status}"
-        )
-
-        return message
-
-    except Exception as e:
-        return f"Error fetching data from API: {str(e)}"
-
-# Initialize the bot
-
-# Xử lý lệnh /info
 @bot.message_handler(commands=['info'])
-def handle_info_command(message):
-    # Kiểm tra xem người dùng đã nhập Facebook ID sau lệnh /info chưa
-    if len(message.text.split()) == 1:
-        bot.reply_to(message, 'Vui lòng nhập Facebook ID sau lệnh /info.')
-        return
+def send_info(message):
+    try:
+        # Extract user ID from the message
+        command_parts = message.text.split()
+        if len(command_parts) < 2:
+            bot.reply_to(message, "Vui lòng cung cấp ID để tra cứu thông tin.")
+            return
+        
+        id = command_parts[1]
+        
+        # API request to fetch user information
+        api_url = f'https://dichvukey.site/api/fb.php?id={id}'
+        
+        try:
+            response = requests.get(api_url)
+            response.raise_for_status()  # Raise error for bad status codes
+            
+            # Parse JSON response
+            data = response.json()
+            
+            if data and 'error' not in data:
+                formatted_info = format_facebook_info(id, data)
+                bot.reply_to(message, formatted_info)
+            else:
+                bot.reply_to(message, "Không tìm thấy thông tin cho ID này.")
+        
+        except requests.exceptions.RequestException as e:
+            logging.error(f"RequestException: {str(e)}")
+            bot.reply_to(message, "Có lỗi khi gửi yêu cầu đến API.")
+        
+        except ValueError as e:
+            logging.error(f"ValueError: {str(e)}")
+            bot.reply_to(message, "Dữ liệu không hợp lệ từ API.")
+        
+        except Exception as e:
+            logging.error(f"Exception: {str(e)}")
+            bot.reply_to(message, "Có lỗi xảy ra khi xử lý yêu cầu của bạn.")
+    
+    except IndexError:
+        bot.reply_to(message, "Vui lòng cung cấp ID để tra cứu thông tin.")
 
-    # Lấy Facebook ID từ tin nhắn của người dùng
-    facebook_id = message.text.split()[1]
+def format_facebook_info(id, data):
+    # Extract necessary information from JSON data
+    # Modify as per your existing logic
+    
+    info_text = f"Thông tin đầy đủ về người dùng có ID {id}:\n" \
+                f"- Tên: {data.get('name', 'N/A')}\n" \
+                f"- Giới tính: {data.get('gender', 'N/A')}\n" \
+                f"- Sinh nhật: {data.get('birthday', 'N/A')}\n" \
+                f"- Quê quán: {data.get('hometown', {}).get('name', 'N/A')}\n" \
+                f"- Công việc:\n"
+    
+    work_data = data.get('work', [])
+    for job in work_data:
+        employer = job.get('employer', {}).get('name', 'N/A')
+        position = job.get('position', {}).get('name', 'N/A')
+        start_date = job.get('start_date', 'N/A')
+        info_text += f"  - {position} tại {employer} từ {start_date}\n"
+    
+    info_text += f"- Hình ảnh bìa: {data.get('cover', {}).get('source', 'N/A')}\n" \
+                 f"- Username: {data.get('username', 'N/A')}\n" \
+                 f"- Link Facebook: {data.get('link', 'N/A')}\n" \
+                 f"- Ngôn ngữ: {data.get('locale', 'N/A')}\n" \
+                 f"- Giới thiệu: {data.get('about', 'N/A')}\n" \
+                 f"- Tình trạng mối quan hệ: {data.get('relationship_status', 'N/A')}\n" \
+                 f"- Người thân quan trọng: {data.get('significant_other', {}).get('name', 'N/A')}\n" \
+                 f"- Câu nói hay: {data.get('quotes', 'N/A')}"
 
-    # Gọi hàm get_facebook_info để lấy thông tin từ API
-    info_message = get_facebook_info(facebook_id)
-
-    # Kiểm tra và gửi tin nhắn phản hồi
-    if "Error fetching data from API" in info_message:
-        bot.reply_to(message, info_message)
-    else:
-        bot.send_message(chat_id=allowed_group_id, text=info_message)
+    return info_text
 
 
 ######
@@ -503,7 +518,6 @@ def supersms(message):
 │ Spam: Thành Công 
 │ Số Lần Spam VIP: {count}
 │ Đang Tấn Công : {sdt}
-│ Đợi 10p sau mới chạy tiếp spam kick đó!
 └─────────────
     '''
     
