@@ -503,6 +503,7 @@ def supersms(message):
 │ Spam: Thành Công 
 │ Số Lần Spam VIP: {count}
 │ Đang Tấn Công : {sdt}
+│ Đợi 10p sau mới chạy tiếp spam kick đó!
 └─────────────
     '''
     
