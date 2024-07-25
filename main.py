@@ -313,6 +313,7 @@ def send_welcome(message):
 │» /time : check thời gian hoạt động
 │» /ad : có bao nhiêu admin
 │» Lệnh Cho ADMIN
+│» /rs : Khởi Động Lại
 │» /add : Thêm người dùng sử dụng /spamvip
 └───────────⧕
     ''')
@@ -348,7 +349,7 @@ def spam(message):
     params = message.text.split()[1:]
 
     if len(params) < 2:
-        bot.reply_to(message, "Vui lòng nhập đầy đủ thông tin.")
+        bot.reply_to(message, "/spam 113 5 như này cơ mà.")
         return
 
     sdt = params[0]
@@ -361,7 +362,7 @@ def spam(message):
     count = int(count)
     
     if count > 5:
-        bot.reply_to(message, "Số lần spam không được vượt quá 5 lần.")
+        bot.reply_to(message, "/spam sdt 5 thôi nhé.")
         return
 
     if sdt in blacklist:
@@ -424,7 +425,7 @@ def supersms(message):
     count = params[2]
 
     if not count.isdigit():
-        bot.reply_to(message, "Số lần spam không hợp lệ. Vui lòng nhập một số nguyên dương.")
+        bot.reply_to(message, "/spam sdt 30 như này mới đúng.")
         return
     
     count = int(count)
@@ -508,5 +509,24 @@ def get_user_id(message):
             bot.reply_to(message, f"ID của {user.first_name} là: `{user.id}`", parse_mode='Markdown')
         except Exception as e:
             bot.reply_to(message, "Không tìm thấy người dùng có username này.")
+####################
+def restart_program():
+    """Khởi động lại script chính."""
+    python = sys.executable
+    os.execl(python, python, *sys.argv)
 
+@bot.message_handler(commands=['rs'])
+def handle_reset(message):
+    if message.from_user.id == ADMIN_ID:
+        bot.reply_to(message, "Bot đang khởi động lại...")
+        restart_program()
+    else:
+        bot.reply_to(message, "Bạn không có quyền truy cập vào lệnh này!")
+def main():
+    while True:
+        try:
+            bot.polling()
+        except Exception as e:
+            print(f"Bot gặp lỗi: {e}")
+            time.sleep(5)
 bot.polling()
