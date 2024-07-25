@@ -313,7 +313,7 @@ def send_welcome(message):
 │» /time : check thời gian hoạt động
 │» /ad : có bao nhiêu admin
 │» Lệnh Cho ADMIN
-│» /rs : Khởi Động Lại bot
+│» /rs : Khởi Động Lại
 │» /add : Thêm người dùng sử dụng /spamvip
 └───────────⧕
     ''')
@@ -511,9 +511,16 @@ def get_user_id(message):
             bot.reply_to(message, "Không tìm thấy người dùng có username này.")
 ####################
 def restart_program():
-    """Khởi động lại script chính."""
+    """Khởi động lại script chính và môi trường chạy."""
     python = sys.executable
-    os.execl(python, python, *sys.argv)
+    script = sys.argv[0]
+    # Khởi động lại script chính từ đầu
+    try:
+        subprocess.Popen([python, script])
+    except Exception as e:
+        print(f"Khởi động lại không thành công: {e}")
+    finally:
+        sys.exit()
 
 @bot.message_handler(commands=['rs'])
 def handle_reset(message):
@@ -522,11 +529,4 @@ def handle_reset(message):
         restart_program()
     else:
         bot.reply_to(message, "Bạn không có quyền truy cập vào lệnh này!")
-def main():
-    while True:
-        try:
-            bot.polling()
-        except Exception as e:
-            print(f"Bot gặp lỗi: {e}")
-            time.sleep(5)
 bot.polling()
