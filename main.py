@@ -313,7 +313,7 @@ def send_welcome(message):
 │» /time : check thời gian hoạt động
 │» /ad : có bao nhiêu admin
 │» Lệnh Cho ADMIN
-│» /rs : Khởi Động Lại
+│» /rs : Khởi Động Lại Bot
 │» /add : Thêm người dùng sử dụng /spamvip
 └───────────⧕
     ''')
