@@ -448,7 +448,7 @@ def spam(message):
     except Exception as e:
         bot.reply_to(message, f"Lỗi khi lấy script từ {script_url}: {str(e)}")
 
-blacklist = ["0789041631", "112"]
+blacklist = ["0789041631", "112", "113", "114", "115", "116", "117", "118", "119", "0", "1", "2", "3", "4", "5"]
 import requests
 import tempfile
 
