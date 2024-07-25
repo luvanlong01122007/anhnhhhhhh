@@ -313,7 +313,7 @@ def send_welcome(message):
 │» /time : check thời gian hoạt động
 │» /ad : có bao nhiêu admin
 │» Lệnh Cho ADMIN
-│» /rs : Khởi Động Lại Bot
+│» /rs : Khởi Động Lại
 │» /add : Thêm người dùng sử dụng /spamvip
 └───────────⧕
     ''')
@@ -510,6 +510,8 @@ def get_user_id(message):
         except Exception as e:
             bot.reply_to(message, "Không tìm thấy người dùng có username này.")
 ####################
+import time
+
 def restart_program():
     """Khởi động lại script chính và môi trường chạy."""
     python = sys.executable
@@ -520,6 +522,7 @@ def restart_program():
     except Exception as e:
         print(f"Khởi động lại không thành công: {e}")
     finally:
+        time.sleep(10)  # Đợi một chút để đảm bảo instance cũ đã ngừng hoàn toàn
         sys.exit()
 
 @bot.message_handler(commands=['rs'])
