@@ -481,7 +481,7 @@ def supersms(message):
 ┌───⭓ {name_bot}
 │» Reply User: @{username}
 │» Vui lòng nhập đầy đủ thông tin
-│» Lệnh ví dụ là /spam 0123456789 100  (số lần spam)
+│» Lệnh ví dụ là /spam 0123456789 30  (số lần spam)
 └───────
     '''
     
@@ -498,7 +498,7 @@ def supersms(message):
     
     count = int(count)
     
-    if count > 100:
+    if count > 30:
         bot.reply_to(message, "Số lần spam không được vượt quá 10 lần.")
         return
 
