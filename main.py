@@ -245,6 +245,7 @@ def send_welcome(message):
 │» /tool : Tải tool gộp - Golike Auto - source gộp
 │» /time : check thời gian hoạt động
 │» /ad : có bao nhiêu admin
+│» /code : Lấy Code html của web
 │» /tv : Đổi Ngôn Ngữ Sang Tiếng Việt
 │» Lệnh Cho ADMIN
 │» /rs : Khởi Động Lại
@@ -466,4 +467,27 @@ def handle_reset(message):
 def handle_tv(message):
     # Gửi liên kết để thay đổi ngôn ngữ giao diện với định dạng HTML
     bot.reply_to(message, 'Nhấp <a href="https://t.me/setlanguage/abcxyz">Vào Đây</a> Để Đổi Ngôn Ngữ Sang Tiếng Việt', parse_mode='HTML')
+############
+@bot.message_handler(commands=['code'])
+def handle_code_command(message):
+    # Lấy tham số từ lệnh (URL)
+    command_args = message.text.split(maxsplit=1)
+    
+    if len(command_args) < 2:
+        bot.reply_to(message, "Vui lòng cung cấp URL sau lệnh /code. Ví dụ: /code https://example.com")
+        return
+    url = command_args[1]
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        domain = urlparse(url).netloc
+        file_name = f"{domain}.txt"
+        with open(file_name, 'w', encoding='utf-8') as file:
+            file.write(response.text)
+        with open(file_name, 'rb') as file:
+            bot.send_document(message.chat.id, file, caption=f"HTML của trang web {url}")
+        os.remove(file_name)
+        
+    except requests.RequestException as e:
+        bot.reply_to(message, f"Đã xảy ra lỗi khi tải trang web: {e}")
 bot.polling()
