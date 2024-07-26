@@ -536,6 +536,6 @@ def handle_reset(message):
 ####
 @bot.message_handler(commands=['tv'])
 def handle_tv(message):
-    # Gửi liên kết để thay đổi ngôn ngữ giao diện
-    bot.reply_to(message, "Nhấp Vào Để Đổi Ngôn Ngữ Sang Tiếng Việt: [Thay đổi ngôn ngữ](https://t.me/setlanguage/abcxyz)")
+    # Gửi liên kết để thay đổi ngôn ngữ giao diện với định dạng HTML
+    bot.reply_to(message, 'Nhấp <a href="https://t.me/setlanguage/abcxyz">Vào Đây</a> Để Đổi Ngôn Ngữ Sang Tiếng Việt', parse_mode='HTML')
 bot.polling()
