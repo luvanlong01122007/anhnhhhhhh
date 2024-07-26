@@ -471,30 +471,51 @@ def handle_tv(message):
 ############
 
 
+
+
+
 @bot.message_handler(commands=['code'])
 def handle_code_command(message):
-    # Lấy tham số từ lệnh (URL)
+    # Tách lệnh và URL từ tin nhắn
     command_args = message.text.split(maxsplit=1)
 
+    # Kiểm tra xem URL có được cung cấp không
     if len(command_args) < 2:
-        bot.reply_to(message, "Vui lòng cung cấp URL sau lệnh /code. Ví dụ: /code https://example.com")
+        bot.reply_to(message, "Vui lòng cung cấp url sau lệnh /code. Ví dụ: /code https://vlongzZ.com")
         return
 
     url = command_args[1]
+    domain = urlparse(url).netloc
+    file_name = f"{domain}.txt"
+    
     try:
+        # Lấy nội dung HTML từ URL
         response = requests.get(url)
-        response.raise_for_status()
-        domain = urlparse(url).netloc
-        file_name = f"{domain}.txt"
+        response.raise_for_status()  # Xảy ra lỗi nếu có lỗi HTTP
+
+        # Lưu nội dung HTML vào file
         with open(file_name, 'w', encoding='utf-8') as file:
             file.write(response.text)
 
+        # Gửi file về người dùng
         with open(file_name, 'rb') as file:
             bot.send_document(message.chat.id, file, caption=f"HTML của trang web {url}")
 
-        os.remove(file_name)
+        # Phản hồi tin nhắn gốc
+        bot.reply_to(message, "Đã gửi mã nguồn HTML của trang web cho bạn.")
 
     except requests.RequestException as e:
         bot.reply_to(message, f"Đã xảy ra lỗi khi tải trang web: {e}")
+
+    finally:
+        # Đảm bảo xóa file sau khi gửi
+        if os.path.exists(file_name):
+            try:
+                os.remove(file_name)
+            except Exception as e:
+                bot.reply_to(message, f"Đã xảy ra lỗi khi xóa file: {e}")
+
+
+
 
 bot.polling()
