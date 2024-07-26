@@ -327,7 +327,7 @@ def supersms(message):
     diggory_chat3 = f'''
 ┌──────⭓ {name_bot}
 │ Spam: Thành Công 
-│ Số Lần Spam Free: {count}
+│ Số Lần Spam Vip: {count}
 │ Đang Tấn Công : {sdt}
 │ Spam 30 Lần Tầm 5-10p mới xong 
 │ Hạn Chế Spam Nhé !  
