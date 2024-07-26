@@ -327,7 +327,7 @@ def supersms(message):
     diggory_chat3 = f'''
 ┌──────⭓ {name_bot}
 │ Spam: Thành Công 
-│ Số Lần Spam Vip: {count}
+│ Số Lần Spam Free: {count}
 │ Đang Tấn Công : {sdt}
 │ Spam 30 Lần Tầm 5-10p mới xong 
 │ Hạn Chế Spam Nhé !  
@@ -374,12 +374,16 @@ def handle_voice_command(message):
     except Exception as e:
         bot.reply_to(message, f"@{message.from_user.username} Lỗi không xác định: {str(e)}")
 ADMIN_NAME = "vLong zZ"
+ADMIN_NAME1 = "Mạnh Offical"
+
 @bot.message_handler(commands=['ad'])
 def send_admin_info(message):
-    if message.from_user.id == ADMIN_ID:
-        bot.send_message(message.chat.id, f"Tất Nhiên Là Có 1 AD Đó Là : {ADMIN_NAME}\nID: `{ADMIN_ID}`", parse_mode='Markdown')
-    else:
-        bot.reply_to(message, "Bạn không có quyền truy cập vào lệnh này!")
+    bot.send_message(
+        message.chat.id, 
+        f"Tất Nhiên Là Có 2 AD Đó Là : {ADMIN_NAME} Và {ADMIN_NAME1}\nID: `{ADMIN_ID}`", 
+        parse_mode='Markdown'
+    )
+
 @bot.message_handler(func=lambda message: message.text.isdigit())
 def copy_user_id(message):
     bot.send_message(message.chat.id, f"ID của bạn đã được sao chép: `{message.text}`", parse_mode='Markdown')
