@@ -196,6 +196,8 @@ def send_welcome(message):
 │» /yt : Kiểm Tra Thông Tin VD YOUTUBE .
 │» /video : Để Xem Video Chill.
 │» /id : Lấy ID Tele Của Bản Thân
+│» /ID : Lấy ID Tele Của Nhóm
+
 │» /voice : Đổi Văn Bản Thành Giọng Nói.
 │» get : Check Thông Tin Nick Free Fire.
 │» /tiktok : Check Thông Tin - Tải Video Tiktok.
@@ -400,6 +402,10 @@ def get_user_id(message):
             bot.reply_to(message, f"ID của {user.first_name} là: `{user.id}`", parse_mode='Markdown')
         except Exception as e:
             bot.reply_to(message, "Không tìm thấy người dùng có username này.")
+@bot.message_handler(commands=['ID'])
+def handle_id_command(message):
+    chat_id = message.chat.id
+    bot.reply_to(message, f"ID của nhóm này là: {chat_id}")
 ####################
 import time
 
