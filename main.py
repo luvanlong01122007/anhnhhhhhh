@@ -307,13 +307,14 @@ def send_welcome(message):
 │» /yt : Kiểm Tra Thông Tin VD YOUTUBE .
 │» /id : Lấy ID Tele Của Bản Thân
 │» /voice : Đổi Văn Bản Thành Giọng Nói.
-│» /ff : Check Thông Tin Nick Free Fire.
+│» get : Check Thông Tin Nick Free Fire.
 │» /tiktok : Check Thông Tin - Tải Video Tiktok.
 │» /tool : Tải tool gộp - Golike Auto - source gộp
 │» /time : check thời gian hoạt động
 │» /ad : có bao nhiêu admin
+│» /tv : Đổi Ngôn Ngữ Sang Tiếng Việt
 │» Lệnh Cho ADMIN
-│» /rs : Khởi Động Lại Bot
+│» /rs : Khởi Động Lại
 │» /add : Thêm người dùng sử dụng /spamvip
 └───────────⧕
     ''')
@@ -532,4 +533,9 @@ def handle_reset(message):
         restart_program()
     else:
         bot.reply_to(message, "Bạn không có quyền truy cập vào lệnh này!")
+####
+@bot.message_handler(commands=['tv'])
+def handle_tv(message):
+    # Gửi liên kết để thay đổi ngôn ngữ giao diện
+    bot.reply_to(message, "Nhấp Vào Để Đổi Ngôn Ngữ Sang Tiếng Việt: [Thay đổi ngôn ngữ](https://t.me/setlanguage/abcxyz)")
 bot.polling()
