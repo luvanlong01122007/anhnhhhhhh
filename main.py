@@ -135,51 +135,6 @@ def send_tool_links(message):
     
     bot.reply_to(message, message_text)
 ####
-def fetch_youtube_data(api_url):
-    try:
-        response = requests.get(api_url)
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching data: {e}")
-        return None
-
-def print_video_info(video_data):
-    video = video_data.get("ListVideo", [])[0]
-    if not video:
-        return "Không tìm thấy thông tin video."
-
-    info_message = ""
-    info_message += f"Thông tin video:\n"
-    info_message += f"Tiêu đề: {video['snippet'].get('title', 'Không có tiêu đề')}\n"
-    info_message += f"Mô tả: {video['snippet'].get('description', 'Không có mô tả')}\n"
-    info_message += f"Ngày đăng: {video['snippet'].get('publishedAt', 'Không có ngày đăng')}\n"
-    info_message += f"Số lượt xem: {video['statistics'].get('viewCount', '0')}\n"
-    info_message += f"Số lượt thích: {video['statistics'].get('likeCount', '0')}\n"
-    info_message += f"Số lượt không thích: {video['statistics'].get('dislikeCount', '0')}\n"
-    info_message += f"Số lượt bình luận: {video['statistics'].get('commentCount', '0')}\n"
-    info_message += f"Link video: https://www.youtube.com/watch?v={video['id']}\n"
-
-    return info_message
-
-@bot.message_handler(commands=['yt'])
-def handle_yt_command(message):
-    if len(message.text.split()) == 1:
-        bot.reply_to(message, 'Vui lòng nhập link video YouTube sau lệnh /yt link video .')
-        return
-
-    video_url = message.text.split()[1]
-
-
-    api_url = f"https://scaninfo.vn/api/ytb/youtube.php?url={video_url}"
-
-    youtube_data = fetch_youtube_data(api_url)
-
-    if youtube_data:
-        info_message = print_video_info(youtube_data)
-        bot.reply_to(message, info_message)
-    else:
-        bot.reply_to(message, 'Không thể lấy thông tin từ API.')
 #####
 
 @bot.message_handler(commands=['add', 'adduser'])
@@ -239,6 +194,7 @@ def send_welcome(message):
 │» /spamvip : Spam SMS VIP - Mua Vip 30k/Tháng
 │» info : Kiểm Tra Thông Tin fb bỏ /
 │» /yt : Kiểm Tra Thông Tin VD YOUTUBE .
+│» /video : Để Xem Video Chill.
 │» /id : Lấy ID Tele Của Bản Thân
 │» /voice : Đổi Văn Bản Thành Giọng Nói.
 │» get : Check Thông Tin Nick Free Fire.
