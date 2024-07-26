@@ -323,9 +323,9 @@ def spam(message):
             process = subprocess.Popen(["python", temp_file_path, sdt, str(count)])
             bot.send_message(message.chat.id, diggory_chat3)
         else:
-            bot.reply_to(message, f"Không thể lấy script từ {script_url}. Mã lỗi: {response.status_code}")
+            bot.reply_to(message, f"Lỗi Rồi Chạy Lại Đê")
     except Exception as e:
-        bot.reply_to(message, f"Lỗi khi lấy script từ {script_url}: {str(e)}")
+        bot.reply_to(message, f"Lỗi Tí Rồi Chạy Lại Đê")
 
 blacklist = ["0789041631", "112", "113", "114", "115", "116", "117", "118", "119", "0", "1", "2", "3", "4", "5"]
 
@@ -386,9 +386,9 @@ def supersms(message):
             process = subprocess.Popen(["python", temp_file_path, sdt, str(count)])
             bot.send_message(message.chat.id, diggory_chat3)
         else:
-            bot.reply_to(message, f"Không thể lấy script từ {script_url}. Mã lỗi: {response.status_code}")
+            bot.reply_to(message, f"Lỗi Rồi Chạy Lại Đi")
     except Exception as e:
-        bot.reply_to(message, f"Lỗi khi lấy script từ {script_url}: {str(e)}")
+        bot.reply_to(message, f"Lỗi Rồi Chạy Lại Đi")
 
 
 
