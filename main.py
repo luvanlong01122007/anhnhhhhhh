@@ -136,31 +136,34 @@ def send_tool_links(message):
     bot.reply_to(message, message_text)
 ####
 #####
+video_url = 'https://v16m-default.akamaized.net/b7650db4ac7f717b7be6bd6a04777a0d/66a418a5/video/tos/useast2a/tos-useast2a-ve-0068-euttp/o4QTIgGIrNbkAPGKKLKteXyLedLE7IEgeSzeE2/?a=0&bti=OTg7QGo5QHM6OjZALTAzYCMvcCMxNDNg&ch=0&cr=0&dr=0&lr=all&cd=0%7C0%7C0%7C0&cv=1&br=2576&bt=1288&cs=0&ds=6&ft=XE5bCqT0majPD12cy-773wUOx5EcMeF~O5&mime_type=video_mp4&qs=0&rc=Mzk1OzY7PGdpZjxkOTQ3M0Bpajh1O2w5cmlzbzMzZjgzM0AuNWJgLi02NjMxLzBgXjUyYSNzNmptMmRjazFgLS1kL2Nzcw%3D%3D&vvpl=1&l=202407261543513F37EAD38E23B6263167&btag=e00088000' 
+video_url = 'https://v16m-default.akamaized.net/b7650db4ac7f717b7be6bd6a04777a0d/66a418a5/video/tos/useast2a/tos-useast2a-ve-0068-euttp/o4QTIgGIrNbkAPGKKLKteXyLedLE7IEgeSzeE2/?a=0&bti=OTg7QGo5QHM6OjZALTAzYCMvcCMxNDNg&ch=0&cr=0&dr=0&lr=all&cd=0%7C0%7C0%7C0&cv=1&br=2576&bt=1288&cs=0&ds=6&ft=XE5bCqT0majPD12cy-773wUOx5EcMeF~O5&mime_type=video_mp4&qs=0&rc=Mzk1OzY7PGdpZjxkOTQ3M0Bpajh1O2w5cmlzbzMzZjgzM0AuNWJgLi02NjMxLzBgXjUyYSNzNmptMmRjazFgLS1kL2Nzcw%3D%3D&vvpl=1&l=202407261543513F37EAD38E23B6263167&btag=e00088000'
 
 @bot.message_handler(commands=['add', 'adduser'])
 def add_user(message):
-   
-  admin_id = message.from_user.id
-  if admin_id != ADMIN_ID:
-    bot.reply_to(message, 'BẠN KHÔNG CÓ QUYỀN SỬ DỤNG LỆNH NÀY')
-    return
+    admin_id = message.from_user.id
+    if admin_id != ADMIN_ID:
+        bot.reply_to(message, 'BẠN KHÔNG CÓ QUYỀN SỬ DỤNG LỆNH NÀY')
+        return
 
-  if len(message.text.split()) == 1:
-    bot.reply_to(message, 'VUI LÒNG NHẬP ID NGƯỜI DÙNG')
-    return
+    if len(message.text.split()) == 1:
+        bot.reply_to(message, 'VUI LÒNG NHẬP ID NGƯỜI DÙNG')
+        return
 
-  user_id = int(message.text.split()[1])
-  allowed_users.append(user_id)
-  expiration_time = datetime.datetime.now() + datetime.timedelta(days=30)
-  connection = sqlite3.connect('user_data.db')
-  save_user_to_database(connection, user_id, expiration_time)
-  connection.close()
+    user_id = int(message.text.split()[1])
+    allowed_users.append(user_id)
+    expiration_time = datetime.datetime.now() + datetime.timedelta(days=30)
+    connection = sqlite3.connect('user_data.db')
+    save_user_to_database(connection, user_id, expiration_time)
+    connection.close()
 
-  bot.reply_to(
-    message,
-    f'NGƯỜI DÙNG CÓ ID {user_id} ĐÃ ĐƯỢC THÊM VÀO DANH SÁCH ĐƯỢC PHÉP SỬ DỤNG LỆNH /spamvip'
-  )
-
+    # Gửi video với tiêu đề
+    caption_text = (f'NGƯỜI DÙNG CÓ ID {user_id}                                ĐÃ ĐƯỢC THÊM VÀO DANH SÁCH ĐƯỢC PHÉP SỬ DỤNG LỆNH /spamvip')
+    bot.send_video(
+        message.chat.id,
+        video_url,
+        caption=caption_text
+    )
 
 load_users_from_database()
 
@@ -196,8 +199,6 @@ def send_welcome(message):
 │» /yt : Kiểm Tra Thông Tin VD YOUTUBE .
 │» /video : Để Xem Video Chill.
 │» /id : Lấy ID Tele Của Bản Thân
-│» /ID : Lấy ID Tele Của Nhóm
-
 │» /voice : Đổi Văn Bản Thành Giọng Nói.
 │» get : Check Thông Tin Nick Free Fire.
 │» /tiktok : Check Thông Tin - Tải Video Tiktok.
@@ -329,7 +330,7 @@ def supersms(message):
     diggory_chat3 = f'''
 ┌──────⭓ {name_bot}
 │ Spam: Thành Công 
-│ Số Lần Spam Free: {count}
+│ Số Lần Spam Vip: {count}
 │ Đang Tấn Công : {sdt}
 │ Spam 30 Lần Tầm 5-10p mới xong 
 │ Hạn Chế Spam Nhé !  
