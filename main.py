@@ -76,74 +76,6 @@ def save_user_to_database(connection, user_id, expiration_time):
   connection.commit()
 ###
 
-API_URL = 'https://scaninfo.vn/api/ff.php?id={}'
-
-@bot.message_handler(commands=['ff'])
-def handle_ff_command(message):
-    try:
-        # Lấy id từ lệnh /ff
-        id = message.text.split()[1].strip() 
-
-        # Gửi yêu cầu đến API để lấy thông tin
-        response = requests.get(API_URL.format(id))
-        
-        # Kiểm tra mã trạng thái của yêu cầu
-        response.raise_for_status()
-
-        # Phân tích dữ liệu JSON từ phản hồi
-        data = response.json()
-
-        if 'Account Name' in data:
-            # Trích xuất thông tin tài khoản và Guild
-            account_name = data['Account Name']
-            account_level = data['Account Level']
-            account_region = data['Account Region']
-            account_likes = data['Account Likes']
-            account_xp = data['Account XP']
-            account_last_login = data['Account Last Login (GMT 0530)']
-            account_create_time = data['Account Create Time (GMT 0530)']
-            account_booyah_pass = data['Account Booyah Pass']
-
-            guild_name = data['Guild Information']['Guild Name']
-            guild_level = data['Guild Information']['Guild Level']
-            guild_leader_name = data['Guild Leader Information']['Leader Name']
-
-            # Tạo tin nhắn phản hồi
-            response_message = f"Thông tin tài khoản Free Fire:\n\n" \
-                               f"Tên: {account_name}\n" \
-                               f"Level: {account_level}\n" \
-                               f"Khu vực: {account_region}\n" \
-                               f"Lượt thích: {account_likes}\n" \
-                               f"Kinh nghiệm (XP): {account_xp}\n" \
-                               f"Lần đăng nhập cuối: {account_last_login}\n" \
-                               f"Ngày tạo: {account_create_time}\n" \
-                               f"Booyah Pass: {account_booyah_pass}\n\n" \
-                               f"Thông tin Guild:\n" \
-                               f"Tên Guild: {guild_name}\n" \
-                               f"Level Guild: {guild_level}\n" \
-                               f"Leader Guild: {guild_leader_name}"
-
-            bot.reply_to(message, response_message)
-        else:
-            bot.reply_to(message, "Không tìm thấy thông tin cho ID này.")
-
-    except IndexError:
-        bot.reply_to(message, "Vui lòng nhập lệnh đúng /ff id.")
-    
-    except requests.exceptions.HTTPError as errh:
-        bot.reply_to(message, f"Lỗi HTTP: {errh}")
-    
-    except requests.exceptions.ConnectionError as errc:
-        bot.reply_to(message, f"Lỗi kết nối: {errc}")
-    
-    except requests.exceptions.Timeout as errt:
-        bot.reply_to(message, f"Timeout: {errt}")
-    
-    except requests.exceptions.RequestException as err:
-        bot.reply_to(message, f"Lỗi không xác định: {err}")
-
-    except json.JSONDecodeError as json_err:
-        bot.reply_to(message, f"Lỗi phân tích JSON: {json_err}")
 
 
 ###
@@ -341,8 +273,8 @@ def spam(message):
     user_id = message.from_user.id
     
     current_time = time.time()
-    if user_id in last_usage and current_time - last_usage[user_id] < 25:
-        bot.reply_to(message, f"Vui lòng đợi {25 - (current_time - last_usage[user_id]):.1f} giây trước khi sử dụng lệnh lại.")
+    if user_id in last_usage and current_time - last_usage[user_id] < 60:
+        bot.reply_to(message, f"Vui lòng đợi {60 - (current_time - last_usage[user_id]):.1f} giây trước khi sử dụng lệnh lại.")
         return
     
     last_usage[user_id] = current_time
@@ -375,6 +307,8 @@ def spam(message):
 │ Spam: Thành Công 
 │ Số Lần Spam Free: {count}
 │ Đang Tấn Công : {sdt}
+│ Spam 5 Lần Tầm 1-2p mới xong 
+│ Hạn Chế Spam Nhé !  
 └─────────────
     '''
 
