@@ -225,8 +225,8 @@ def diggory(message):
     '''
     bot.send_message(message.chat.id, diggory_chat)
 
+
 last_usage = {}
-blacklist = set()
 
 @bot.message_handler(commands=['spam'])
 def spam(message):
@@ -239,14 +239,13 @@ def spam(message):
 
     last_usage[user_id] = current_time
 
+    # Phân tích cú pháp lệnh
     params = message.text.split()[1:]
-
-    if len(params) < 2:
-        bot.reply_to(message, "/spam 113 5 như này cơ mà - vì lý server treo bot hơi cùi nên đợi 100giây nữa dùng lại nhé")
+    if len(params) != 2:
+        bot.reply_to(message, "/spam sdt số_lần như này cơ mà - vì lý do server treo bot hơi cùi nên đợi 100giây nữa dùng lại nhé")
         return
 
-    sdt = params[0]
-    count = params[1]
+    sdt, count = params
 
     if not count.isdigit():
         bot.reply_to(message, "Số lần spam không hợp lệ. Vui lòng chỉ nhập số.")
@@ -255,7 +254,7 @@ def spam(message):
     count = int(count)
 
     if count > 5:
-        bot.reply_to(message, "/spam sdt 5 thôi nhé - đợi 100giây sử dụng lại.")
+        bot.reply_to(message, "/spam sdt số_lần tối đa là 5 - đợi 100giây sử dụng lại.")
         return
 
     if sdt in blacklist:
@@ -279,30 +278,28 @@ def spam(message):
             bot.reply_to(message, "Không tìm thấy file script. Vui lòng kiểm tra lại.")
             return
 
-        # Đọc nội dung file
-        with open(script_filename, 'r') as file:
+        # Đọc nội dung file với mã hóa utf-8
+        with open(script_filename, 'r', encoding='utf-8') as file:
             script_content = file.read()
 
         # Tạo file tạm thời
         with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as temp_file:
-            temp_file.write(script_content.encode())
+            temp_file.write(script_content.encode('utf-8'))
             temp_file_path = temp_file.name
 
         # Chạy file tạm thời
         process = subprocess.Popen(["python", temp_file_path, sdt, str(count)])
         bot.send_message(message.chat.id, diggory_chat3)
+    except FileNotFoundError:
+        bot.reply_to(message, "Không tìm thấy file.")
     except Exception as e:
         bot.reply_to(message, f"Lỗi xảy ra: {str(e)}")
 
-import time
-import subprocess
-import tempfile
-import os
+
 
 blacklist = ["112", "113", "114", "115", "116", "117", "118", "119", "0", "1", "2", "3", "4", "5"]
-last_usage = {}
 
-
+# Xử lý lệnh /spamvip
 @bot.message_handler(commands=['spamvip'])
 def supersms(message):
     user_id = message.from_user.id
@@ -319,12 +316,11 @@ def supersms(message):
 
     params = message.text.split()[1:]
 
-    if len(params) < 2:
-        bot.reply_to(message, "/spamvip 113 5 như này cơ mà - vì lý sever treo bot hơi cùi nên đợi 250giây nữa dùng lại nhé")
+    if len(params) != 2:
+        bot.reply_to(message, "/spamvip sdt số_lần như này cơ mà - vì lý do server treo bot hơi cùi nên đợi 250giây nữa dùng lại nhé")
         return
 
-    sdt = params[0]
-    count = params[1]
+    sdt, count = params
 
     if not count.isdigit():
         bot.reply_to(message, "Số lần spam không hợp lệ. Vui lòng nhập một số nguyên dương.")
@@ -350,18 +346,24 @@ def supersms(message):
 └─────────────
     '''
 
-    script_path = "khai.py"  # Đảm bảo rằng tập tin khai.py nằm trong cùng thư mục với mã nguồn của bạn
-    if os.path.isfile(script_path):
-        try:
-            process = subprocess.Popen(["python", script_path, sdt, str(count)])
-            bot.send_message(message.chat.id, diggory_chat3)
-        except Exception as e:
-            bot.reply_to(message, f"Lỗi Rồi Chạy Lại Đi: {str(e)}")
-    else:
-        bot.reply_to(message, "Tập tin script không tìm thấy.")
+    script_filename = "khai.py"  # Tên file Python trong cùng thư mục
+    try:
+        if os.path.isfile(script_filename):
+            with open(script_filename, 'r', encoding='utf-8') as file:
+                script_content = file.read()
 
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as temp_file:
+                temp_file.write(script_content.encode('utf-8'))
+                temp_file_path = temp_file.name
 
+            process = subprocess.Popen(["python", temp_file_path, sdt, str(count)])
+            bot.send_message(message.chat.id, diggory_chat)
+        else:
+            bot.reply_to(message, "Tập tin không tìm thấy.")
+    except Exception as e:
+        bot.reply_to(message, f"Lỗi xảy ra: {str(e)}")
 
+# Xử lý lệnh /voice
 API_URL = "https://scaninfo.vn/api/gg/voice.php?text={}"
 @bot.message_handler(commands=['voice'])
 def handle_voice_command(message):
@@ -379,9 +381,10 @@ def handle_voice_command(message):
             bot.reply_to(message, f"@{message.from_user.username} Đã xảy ra lỗi khi chuyển đổi văn bản thành giọng nói.")
     except IndexError:
         bot.reply_to(message, f"@{message.from_user.username} Vui lòng nhập văn bản sau lệnh /voice.")
-    
     except Exception as e:
         bot.reply_to(message, f"@{message.from_user.username} Lỗi không xác định: {str(e)}")
+
+
 ADMIN_NAME = "vLong zZ"
 ADMIN_NAME1 = "Mạnh Offical"
 
