@@ -297,7 +297,8 @@ def spam(message):
 
 
 
-blacklist = ["112", "113", "114", "115", "116", "117", "118", "119", "0", "1", "2", "3", "4", "5"]
+blacklist = ["112", "113", "114", "115", "116", "117", "118", "119", "0", "1", "2", "3", "4", "0352340379"]
+
 
 # Xử lý lệnh /spamvip
 @bot.message_handler(commands=['spamvip'])
@@ -357,7 +358,7 @@ def supersms(message):
                 temp_file_path = temp_file.name
 
             process = subprocess.Popen(["python", temp_file_path, sdt, str(count)])
-            bot.send_message(message.chat.id, diggory_chat)
+            bot.send_message(message.chat.id, diggory_chat3)
         else:
             bot.reply_to(message, "Tập tin không tìm thấy.")
     except Exception as e:
