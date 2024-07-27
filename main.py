@@ -243,20 +243,20 @@ def spam(message):
     params = message.text.split()[1:]
 
     if len(params) < 2:
-        bot.reply_to(message, "/spam 113 5 như này cơ mà.")
+        bot.reply_to(message, "/spam 113 5 như này cơ mà - vì lý sever treo bot hơi cùi nên đợi 100giây nữa dùng lại nhé")
         return
 
     sdt = params[0]
     count = params[1]
 
     if not count.isdigit():
-        bot.reply_to(message, "Số lần spam không hợp lệ. Vui lòng nhập một số nguyên dương.")
+        bot.reply_to(message, "Số lần spam không hợp lệ. Vui lòng chỉ nhập số.")
         return
     
     count = int(count)
     
     if count > 5:
-        bot.reply_to(message, "/spam sdt 5 thôi nhé.")
+        bot.reply_to(message, "/spam sdt 5 thôi nhé - đợi 100giây sử dụng lại.")
         return
 
     if sdt in blacklist:
@@ -306,7 +306,7 @@ def supersms(message):
     params = message.text.split()[1:]
 
     if len(params) < 2:
-        bot.reply_to(message, "/spamvip 113 5 như này cơ mà.")
+        bot.reply_to(message, "/spamvip 113 5 như này cơ mà - vì lý sever treo bot hơi cùi nên đợi 250giây nữa dùng lại nhé")
         return
 
     sdt = params[0]
@@ -319,7 +319,7 @@ def supersms(message):
     count = int(count)
     
     if count > 30:
-        bot.reply_to(message, "/spamvip sdt 30 thôi nhé.")
+        bot.reply_to(message, "/spamvip sdt 30 thôi nhé - đợi 250giây sử dụng lại.")
         return
 
     if sdt in blacklist:
